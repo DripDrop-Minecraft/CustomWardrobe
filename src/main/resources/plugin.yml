@@ -1,0 +1,9 @@
+name: CustomWardrobe
+version: 1.0.0
+author: DripDrop
+main: Wardrobe
+api-version: 1.16
+
+commands:
+  wardrobe:
+    
