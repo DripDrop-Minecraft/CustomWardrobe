@@ -14,9 +14,10 @@ import utils.GuiTask
 object WardrobeGui {
     private val BACKGROUND = ItemStack(Material.DIRT).apply {
         type = Material.valueOf("BLACK_STAINED_GLASS_PANE")
-        itemMeta?.setDisplayName(" ")
+        itemMeta?.setDisplayName("")
     }
     private val armors = arrayListOf(Armor.HELMET, Armor.CHESTPLATE, Armor.LEGGINGS, Armor.BOOTS)
+    private var currentGuiName: String = ""
 
     fun createWardrobeFirstPage(player: Player) {
         val inventory = createWardrobePage(player, "1")
@@ -26,7 +27,7 @@ object WardrobeGui {
 
     fun createWardrobeSecondPage(player: Player) = player.openInventory(createWardrobePage(player, "2"))
 
-    fun createBasicBackground(inventory: Inventory, page: String) {
+    private fun createBasicBackground(inventory: Inventory, page: String) {
         if (page.equals("1", true)) {
             armors.forEach {
                 setBasicBackground(it, this::page1SetBasicBackgroundForArmor)
@@ -92,9 +93,9 @@ object WardrobeGui {
     }
 
     private fun createWardrobePage(player: Player, page: String): Inventory {
-        val title = "${(Wardrobe.IMPL.config.get("Title") ?: "海澜之家")} $page/2"
-        val name = ChatColor.translateAlternateColorCodes('&', title)
-        val wardrobePage = Bukkit.createInventory(player, 54, name)
+        val title = "${Wardrobe.IMPL.config.getString("Title") ?: "DripDrop Wardrobe"} [$page/2]"
+        currentGuiName = ChatColor.translateAlternateColorCodes('&', title)
+        val wardrobePage = Bukkit.createInventory(player, 54, currentGuiName)
         wardrobePage.apply {
             (45..53).forEach {
                 setItem(it, BACKGROUND)
@@ -102,8 +103,8 @@ object WardrobeGui {
             createGoBackAndCloseButton(this)
             createNextAndPreviousButton(this)
             createBasicBackground(this, page)
-            createAvailableSlotBackground(this, name, player)
-            createCheckButton(CreatedInventory(this, player, name))
+            createAvailableSlotBackground(this, currentGuiName, player)
+            createCheckButton(CreatedInventory(this, player, currentGuiName))
         }
         return wardrobePage
     }

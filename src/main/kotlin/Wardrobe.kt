@@ -36,6 +36,15 @@ class Wardrobe: JavaPlugin() {
     }
 
     override fun onDisable() {
+        Bukkit.getOnlinePlayers().forEach {
+            it.openInventory.apply {
+                if (title.contains("Wardrobe")) {
+                    player.inventory.addItem(player.itemOnCursor)
+                    player.setItemOnCursor(null)
+                    it.closeInventory()
+                }
+            }
+        }
         logger.info("${ChatColor.GREEN}$TAG ${ChatColor.YELLOW}CustomWardrobe已停止！")
     }
 

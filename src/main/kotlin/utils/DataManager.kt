@@ -13,6 +13,7 @@ class DataManager(private val wardrobe: Wardrobe) {
     private lateinit var file: File
     private lateinit var fileNameInside: String
     private val externalPath = "plugins${File.separator}CustomWardrobe${File.separator}"
+    var pageName = ""
 
     fun init(fileName: String): DataManager {
         fileNameInside = fileName
@@ -24,6 +25,7 @@ class DataManager(private val wardrobe: Wardrobe) {
                 wardrobe.logger.info("${ChatColor.GREEN}$TAG ${ChatColor.YELLOW}配置文件${fileName}已保存")
                 wardrobe.saveResource(fileName, false)
             } else {
+                pageName = fileName.removeSuffix(".yml")
                 saveConfig()
             }
         }
