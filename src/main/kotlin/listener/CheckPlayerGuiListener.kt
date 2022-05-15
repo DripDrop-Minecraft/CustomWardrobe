@@ -3,12 +3,10 @@ package listener
 import Wardrobe
 import gui.Armor
 import gui.CheckPlayerGui
-import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.java.JavaPlugin
 import utils.DataManager
 
 class CheckPlayerGuiListener private constructor(): Listener {
@@ -16,10 +14,6 @@ class CheckPlayerGuiListener private constructor(): Listener {
         val IMPL: CheckPlayerGuiListener by lazy { CheckPlayerGuiListener() }
     }
     private val specifiedMaterial = "STAINED_GLASS_PANE"
-
-    fun register(plugin: JavaPlugin) {
-        Bukkit.getPluginManager().registerEvents(this, plugin)
-    }
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {

@@ -1,5 +1,6 @@
 import command.WardrobeCommand
 import command.WardrobeTabCompleter
+import gui.Armor
 import listener.CheckPlayerGuiListener
 import listener.WardrobeListener
 import org.bukkit.Bukkit
@@ -8,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import utils.DataManager
 
 const val TAG = "[CustomWardrobe]"
-
+val armors = arrayListOf(Armor.HELMET, Armor.CHESTPLATE, Armor.LEGGINGS, Armor.BOOTS)
 class Wardrobe: JavaPlugin() {
     companion object {
         val IMPL: Wardrobe by lazy { Wardrobe() }
@@ -31,16 +32,20 @@ class Wardrobe: JavaPlugin() {
             setExecutor(WardrobeCommand.IMPL)
             tabCompleter = WardrobeTabCompleter.IMPL
         }
-        WardrobeListener.IMPL.register(this)
-        CheckPlayerGuiListener.IMPL.register(this)
+        Bukkit.getPluginManager().apply {
+            registerEvents(WardrobeListener.IMPL, this@Wardrobe)
+            registerEvents(CheckPlayerGuiListener.IMPL, this@Wardrobe)
+        }
     }
 
     override fun onDisable() {
         Bukkit.getOnlinePlayers().forEach {
             it.openInventory.apply {
-                if (title.contains("Wardrobe")) {
-                    player.inventory.addItem(player.itemOnCursor)
-                    player.setItemOnCursor(null)
+                if (title.contains(Regex("\\[([12])/2]"))) {
+                    player.apply {
+                        inventory.addItem(itemOnCursor)
+                        setItemOnCursor(null)
+                    }
                     it.closeInventory()
                 }
             }

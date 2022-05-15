@@ -1,6 +1,7 @@
 package command
 
 import TAG
+import Wardrobe
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -25,16 +26,17 @@ class WardrobeCommand private constructor(): CommandExecutor {
 
     private fun commandsForAdmin(player: Player, args: Array<out String>): Boolean = when(args.size) {
         0 -> showHelpForAdmin(player)
-        1 -> executeWithoutArgs(args[0], true)
-        2 -> executeWithOneArg(args)
-        3 -> executeWithTwoArgs(args)
-        4 -> executeWithThreeArgs(args)
+        1 -> executeWithoutArgs(player, args[0], true)
+        2 -> executeWithOneArg(player, args)
+        3 -> executeWithTwoArgs(player, args)
+        4 -> executeWithThreeArgs(player, args)
         else -> invalidCommandHint(player)
     }
 
     private fun commandsForPlayer(player: Player, args: Array<out String>): Boolean = when(args.size) {
         0 -> showHelp(player)
-        1 -> executeWithoutArgs(args[0])
+        1 -> executeWithoutArgs(player, args[0])
+        2 -> executeWithOneArg(player, args)
         else -> invalidCommandHint(player)
     }
 
@@ -71,39 +73,43 @@ class WardrobeCommand private constructor(): CommandExecutor {
         return false
     }
 
-    private fun executeWithoutArgs(cmd: String, isAdmin: Boolean = false): Boolean {
+    private fun executeWithoutArgs(player: Player, cmd: String, isAdmin: Boolean = false): Boolean {
         cmd.apply {
             return when {
                 equals("reload", true) && isAdmin -> reloadConfig()
-                equals("open", true) -> openMyGui()
+                equals("open", true) -> openMyGui(player)
                 else -> false
             }
         }
     }
 
     private fun reloadConfig(): Boolean {
-        // TODO: 重新读取配置
+        Wardrobe.IMPL.apply {
+            getConfiguration().reloadConfig()
+            getFirstPage().reloadConfig()
+            getSecondPage().reloadConfig()
+        }
         Bukkit.broadcastMessage("${ChatColor.YELLOW}CustomWardrobe已重新加载配置")
         Bukkit.getConsoleSender().sendMessage("${ChatColor.GREEN}$TAG ${ChatColor.RED}已重新加载配置")
         return true
     }
 
-    private fun openMyGui(): Boolean {
+    private fun openMyGui(player: Player): Boolean {
         // TODO: 打开玩家自己的衣柜
         return true
     }
 
-    private fun executeWithOneArg(args: Array<out String>): Boolean {
+    private fun executeWithOneArg(player: Player, args: Array<out String>): Boolean {
         // TODO
         return true
     }
 
-    private fun executeWithTwoArgs(args: Array<out String>): Boolean {
+    private fun executeWithTwoArgs(player: Player, args: Array<out String>): Boolean {
         // TODO
         return true
     }
 
-    private fun executeWithThreeArgs(args: Array<out String>): Boolean {
+    private fun executeWithThreeArgs(player: Player, args: Array<out String>): Boolean {
         // TODO
         return true
     }
